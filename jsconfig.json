@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"]
+      "@components/*": ["./components/*"],
+      "@firebase/*": ["./firebase/*"],
+      "@hooks/*": ["./hooks/*"],
+      "@store/*": ["./store/*"],
+      "@assets/*": ["./assets/*"]
     }
   }
 }
