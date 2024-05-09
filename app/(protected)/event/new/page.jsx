@@ -1,27 +1,33 @@
 "use client";
 
-import app from "@firebase/config";
+import { Events } from "@firebase/collections";
+import { toastSuccess } from "@utils/toast";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import getId from "uuid4";
 
-const Events = () => {
+const AddEvent = () => {
   const [eventName, setEventName] = useState("");
   const [eventDateTime, setEventDateTime] = useState("");
   const [description, setDescription] = useState("");
   const [banner, setBanner] = useState("");
   const [organiser, setOrganiser] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(getId());
-    addDoc(doc(collection(app, "Events"), getId()), {
-      eventName,
-      eventDateTime,
-      description,
-      //   banner,
-      organiser,
-    });
+    console.log(eventName, eventDateTime, description, organiser);
+    try {
+      await addDoc(Events, {
+        eventName,
+        eventDateTime,
+        description,
+        organiser,
+      });
+      console.log("event added");
+      toastSuccess("Event added successfully");
+      console.log("Document written with ID: ");
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
@@ -97,4 +103,4 @@ const Events = () => {
   );
 };
 
-export default Events;
+export default AddEvent;

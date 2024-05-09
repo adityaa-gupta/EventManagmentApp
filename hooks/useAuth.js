@@ -1,45 +1,77 @@
-import app from "@firebase/config";
+import { app } from "@firebase/config";
 import useAuthStore from "@store/useAuthStore";
+import { toastError } from "@utils/toast";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const auth = getAuth(app);
+const useAuth = (loginURL, logoutURL) => {
+  const auth = getAuth(app);
+  const router = useRouter();
+  const [isLoading, setLoading] = useState(true);
+  const { user, isAuthenticated, setIsAuthenticated, setUser } = useAuthStore();
 
-const useAuth = () => {
-  const { login, logout } = useAuthStore();
-  const signUp = (email, password) => {
+  const signup = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        login(user);
-        console.log(user);
+      .then((userCredentials) => {
+        if (userCredentials) {
+          setIsAuthenticated(true);
+          setUser(userCredentials.user);
+          loginURL && router.replace(loginURL);
+        }
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      .catch((err) => {
+        console.log(err);
+        toastError(err.message);
       });
   };
-  const signIn = (email, password) => {
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        setIsAuthenticated(false);
+        setUser({});
+        logoutURL && router.replace(logoutURL);
+      })
+      .catch((err) => {
+        console.log(err);
+        toastError(err.message);
+      });
+  };
+
+  const login = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        login(user);
+      .then((userCredentials) => {
+        if (userCredentials) {
+          setIsAuthenticated(true);
+          setUser(userCredentials.user);
+          loginURL && router.replace(loginURL);
+        }
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      .catch((err) => {
+        console.log(err);
+        toastError(err.message);
       });
   };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) login(user);
+      if (user) {
+        setUser(user);
+        setIsAuthenticated(true);
+        loginURL && router.replace(loginURL);
+      } else setIsAuthenticated(false);
+      setLoading(false);
     });
-  }, []);
-  return { signUp, signIn };
+  }, [auth, router, setUser, setIsAuthenticated, loginURL]);
+
+  return { user, isAuthenticated, setUser, signup, login, logout, isLoading };
 };
 
 export default useAuth;

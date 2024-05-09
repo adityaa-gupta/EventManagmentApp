@@ -5,9 +5,10 @@ import useAuthStore from "@store/useAuthStore";
 import React, { useState } from "react";
 
 const Auth = () => {
-  const { signUp, signIn } = useAuth();
+  const { signUp, signIn } = useAuth("/events");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLogedIn, setISLogedIn] = useState(false);
   const user = useAuthStore((state) => state.user);
   //   useAuthStore.setState({ user });
 
@@ -15,7 +16,8 @@ const Auth = () => {
     signIn(username, password);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = (e) => {
+    e.preventDefault();
     signUp(username, password);
   };
 
@@ -54,27 +56,40 @@ const Auth = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div className="flex items-center justify-between">
-          <button
+        <div className="flex items-center justify-between flex-col gap-4">
+          {/* <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={handleSignIn}
           >
             Sign In
-          </button>
+          </button> */}
+          {isLogedIn ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+              onClick={handleSignIn}
+            >
+              Sign In
+            </button>
+          ) : (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+              onClick={handleSignUp}
+            >
+              Sign Up
+            </button>
+          )}
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
-            onClick={handleSignUp}
+            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer"
+            onClick={() => setISLogedIn((val) => !val)}
           >
-            Sign Up
+            {!isLogedIn
+              ? "  Already have an account ? SignIn"
+              : "Create your new account"}
           </button>
-          <a
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-            href="#"
-          >
-            Forgot Password?
-          </a>
         </div>
       </form>
     </div>
