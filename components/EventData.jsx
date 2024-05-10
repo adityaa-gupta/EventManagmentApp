@@ -10,6 +10,7 @@ const EventData = ({ data }) => {
   const { user } = useAuthStore();
   //   console.log(user.uid);
   const userId = user.uid;
+  console.log(userId);
   return data.map((event) => (
     <div
       key={event.id}
