@@ -9,10 +9,10 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLogedIn, setISLogedIn] = useState(false);
-  const user = useAuthStore((state) => state.user);
-  //   useAuthStore.setState({ user });
+  // const user = useAuthStore((state) => state.user);
 
-  const handleSignIn = () => {
+  const handleSignIn = (e) => {
+    e.preventDefault();
     signIn(username, password);
   };
 

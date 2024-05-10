@@ -1,12 +1,12 @@
-import React from "react";
-import { deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
+import { getDocs } from "firebase/firestore";
 import { Events as EventCollection } from "@firebase/collections";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
+import DeleteButton from "@components/DeleteButton";
+import { HiHeart, HiListBullet } from "react-icons/hi2";
+import LogoutButton from "@components/LogoutButton";
+import EventData from "@components/EventData";
+import CreateEventForm from "@components/CreateEventForm";
 
-import AddEvent from "@components/AddEvent";
-
-import { toastSuccess } from "@utils/toast";
-import DeleteButton from "@components/providers/DeleteButton";
 const Events = async () => {
   const docs = (await getDocs(EventCollection)).docs;
   const data = [];
@@ -14,62 +14,23 @@ const Events = async () => {
     data.push({ ...doc.data(), id: doc.id });
   }
 
-  await setDoc(
-    doc(EventCollection, "LL2wPVgPv3SFQl0yUMgQ"),
-    {
-      eventName: "Hello",
-    },
-    { merge: true }
-  );
-
   return (
-    <div className="container mx-auto px-4 py-8  rounded-lg shadow-md">
-      <h1 className="text-8xl font-bold text-blue-50 mb-6">Events</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {data.map((event) => (
-          <div
-            key={event.id}
-            className="flex flex-col  rounded-lg shadow-md overflow-hidden p-4  bg-[#E3FEF7]"
-          >
-            <h2 className="text-2xl font-bold text-[#135D66] text-pretty  mb-2">
-              {event.eventName}
-            </h2>
-            <div className="flex flex-row justify-between items-center mb-2">
-              {event.eventDateTime && (
-                <p className="text-[#457771] flex">
-                  <span className="mr-2">
-                    <CiCalendarDate className=" text-2xl text-[#457771] " />
-                  </span>
-                  {new Date(event.eventDateTime).toLocaleDateString()}
-                </p>
-              )}
-              {event.eventDateTime && (
-                <p className="text-[#457771]  flex">
-                  <span className="mr-2">
-                    <CiTimer className=" text-2xl text-[#457771]  " />
-                  </span>
-                  {new Date(event.eventDateTime).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              )}
-            </div>
-
-            {event.organiser && (
-              <p className="text-[#135D66] mb-2 flex">By: {event.organiser}</p>
-            )}
-            {event.description && (
-              <p className="text-[#135D66]  mb-2">
-                Description: {event.description}
-              </p>
-            )}
-            <DeleteButton id={event.id} />
-          </div>
-        ))}
+    <div className=" mx-auto p-4 bg-gray-200">
+      <nav className="flex sticky justify-between items-center mb-8 rounded-lg bg-white text-2xl font-semibold text-black p-2">
+        <HiHeart className="text-red-500" />
+        <h1 className="text-2xl font-bold text-black">Events</h1>
+        <LogoutButton />
+      </nav>
+      <div
+        className="bg-blue-500 text-blue-50
+      py-4 px-2 rounded-lg mb-4 text-center text-2xl font-semibold
+        "
+      >
+        <CreateEventForm />
       </div>
-      <div>
-        <AddEvent />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <EventData data={data} />
       </div>
     </div>
   );

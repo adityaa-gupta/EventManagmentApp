@@ -17,7 +17,7 @@ const useAuth = (loginURL, logoutURL) => {
   const [isLoading, setLoading] = useState(true);
   const { user, isAuthenticated, setIsAuthenticated, setUser } = useAuthStore();
 
-  const signup = (email, password) => {
+  const signUp = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         if (userCredentials) {
@@ -32,7 +32,7 @@ const useAuth = (loginURL, logoutURL) => {
       });
   };
 
-  const logout = () => {
+  const logOut = () => {
     signOut(auth)
       .then(() => {
         setIsAuthenticated(false);
@@ -45,7 +45,7 @@ const useAuth = (loginURL, logoutURL) => {
       });
   };
 
-  const login = (email, password) => {
+  const signIn = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         if (userCredentials) {
@@ -66,12 +66,23 @@ const useAuth = (loginURL, logoutURL) => {
         setUser(user);
         setIsAuthenticated(true);
         loginURL && router.replace(loginURL);
-      } else setIsAuthenticated(false);
+      } else {
+        setIsAuthenticated(false);
+        logoutURL && router.replace(logoutURL);
+      }
       setLoading(false);
     });
   }, [auth, router, setUser, setIsAuthenticated, loginURL]);
 
-  return { user, isAuthenticated, setUser, signup, login, logout, isLoading };
+  return {
+    user,
+    isAuthenticated,
+    setUser,
+    signUp,
+    signIn,
+    signOut: logOut,
+    isLoading,
+  };
 };
 
 export default useAuth;
