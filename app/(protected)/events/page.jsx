@@ -6,13 +6,14 @@ import { HiHeart, HiListBullet } from "react-icons/hi2";
 import LogoutButton from "@components/LogoutButton";
 import EventData from "@components/EventData";
 import CreateEventForm from "@components/CreateEventForm";
-
+export const dynamic = "force-dynamic";
 const Events = async () => {
   const docs = (await getDocs(EventCollection)).docs;
   const data = [];
   for (const doc of docs) {
     data.push({ ...doc.data(), id: doc.id });
   }
+  // Opt out of caching for all data requests in the route segment
 
   return (
     <div className=" mx-auto p-4 bg-gray-200">
