@@ -24,7 +24,7 @@ const CreateEventForm = () => {
   const [organiser, setOrganiser] = useState("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
+  const interested = [];
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(eventName, eventDateTime, description, organiser);
@@ -34,6 +34,7 @@ const CreateEventForm = () => {
         eventDateTime,
         description,
         organiser,
+        interested,
       });
       console.log("event added");
       router.refresh();

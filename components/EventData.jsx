@@ -4,7 +4,8 @@ import { CiCalendarDate, CiTimer } from "react-icons/ci";
 import DeleteButton from "./DeleteButton";
 
 import useAuthStore from "@store/useAuthStore";
-import { HiBookmark } from "react-icons/hi2";
+import { HiBookmark, HiHeart, HiOutlineHeart } from "react-icons/hi2";
+import ShowInterest from "./ShowInterest";
 
 const EventData = ({ data }) => {
   const { user } = useAuthStore();
@@ -47,6 +48,12 @@ const EventData = ({ data }) => {
           {event.organiser}
         </p>
       )}
+      {event.interested && (
+        <p className="mb-2 flex">
+          <span className="font-semibold">People Interested : &nbsp;</span>
+          {event.interested.length || 0}
+        </p>
+      )}
       {event.description && (
         <p className="text-gray-400 mb-2">
           <span className="font-semibold">Description :</span>{" "}
@@ -58,8 +65,8 @@ const EventData = ({ data }) => {
           <DeleteButton id={event.id} />
         </div>
       ) : (
-        <div>
-          <HiBookmark />
+        <div className="absolute top-4 right-4 text-xl fill text-blue-500">
+          <ShowInterest id={event.id} />
         </div>
       )}
     </div>
